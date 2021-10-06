@@ -1,0 +1,7 @@
+engines:
+  size: 1
+gateways:
+  websocket:
+    port: 443
+plugins:
+  - autotest

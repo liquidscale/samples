@@ -1,0 +1,9 @@
+engines:
+  size: 1
+gateways:
+  websocket:
+    port: 443
+plugins:
+  - media-plugin
+modules:
+  - file:~/projects/lqs-fluid-state/packages/user-presence-module

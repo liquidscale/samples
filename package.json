@@ -1,0 +1,20 @@
+{
+  "name": "@liquidscale/samples",
+  "version": "1.0.0",
+  "description": "FSP Community Samples",
+  "main": "src/main.js",
+  "author": {
+    "email": "joelgrenon@gmail.com",
+    "name": "Joel Grenon",
+    "url": "https://joelgrenon.com"
+  },
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "jest": "^27.2.4",
+    "lerna": "^4.0.0"
+  },
+  "workspaces": [
+    "samples/*"
+  ]
+}
