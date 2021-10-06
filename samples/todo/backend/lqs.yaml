@@ -3,5 +3,7 @@ engines:
 gateways:
   websocket:
     port: 443
-plugins:
-  - autotest
+# plugins:
+#   autotest: "*"
+# modules:
+#   module-user-presence: "file:../../../lqs-modules/modules/user-presence" 
