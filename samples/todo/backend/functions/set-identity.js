@@ -21,13 +21,11 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
-import { scopeRef } from "@liquidscale/platform";
-export const scope = scopeRef("todo-app", {
-  selector: ".users"
-});
 
-export function setIdentity(scope, { morph }) {
-  return ({ identity, color, locale }) => {
+export function setIdentity({ morph }) {
+  this.scope("todo-app", { selector: ".users" });
+
+  return (scope, { identity, color, locale }) => {
     morph(scope.users).upsert({ identity }, { color, locale });
   };
 }

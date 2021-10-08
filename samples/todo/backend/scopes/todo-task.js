@@ -21,14 +21,13 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
-import { scopeRef } from "@liquidscale/platform";
-
-export const parent = scopeRef("todo-list", {
-  selector: ".tasks",
-  idField: "listId"
-});
 
 export function todoTask() {
+  this.scope("todo-list", {
+    selector: ".tasks",
+    idField: "listId"
+  });
+
   return () => ({
     locales: ["en"],
     schema: {

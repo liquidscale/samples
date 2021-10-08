@@ -21,14 +21,11 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
-import { scopeRef } from "@liquidscale/platform";
 
-export const scope = scopeRef("todo-app", {
-  selector: ".users"
-});
+export function updatePresence() {
+  this.scope("todo-app");
 
-export function updatePresence(scope) {
-  return ({ status = "active", device, identity, color }, { meta }) => {
+  return (scope, { status = "active", device, identity, color }, { meta }) => {
     const user = scope.users.find(u => u.identity === identity);
     if (user) {
       user.color = color;
@@ -49,7 +46,9 @@ export function updatePresence(scope) {
   };
 }
 
-export function checkPresence(scope, { timer, config }) {
+export function checkPresence({ timer, config }) {
+  this.scope("todo-app");
+
   // declare a trigger for this function
   this.trigger(timer(config.presence.check_interval, "30s"));
 

@@ -21,18 +21,19 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
-import { scopeRef } from "@liquidscale/platform";
-export const scope = scopeRef("todo-task", {
-  idField: "taskId"
-});
 
-/**
- * Add a comment to a task
- *
- * @param {string} - The comment to add
- */
-export function commentTask(scope, { morph }) {
-  return ({ comment, identity }) => {
-    morph(scope.comments).update({ $push: { comment, author: identity } });
+export function commentTask({ morph }) {
+  this.scope("todo-task", {
+    idField: "taskId"
+  });
+
+  /**
+   * Add a comment to a task
+   *
+   * @param comment {string} - The comment to add
+   * @param author {string} - comment author
+   */
+  return (scope, { comment, author }) => {
+    morph(scope.comments).update({ $push: { comment, author } });
   };
 }

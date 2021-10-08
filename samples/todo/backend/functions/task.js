@@ -22,46 +22,59 @@
    SOFTWARE.
  */
 import { scopeRef } from "@liquidscale/platform";
-export const scope = scopeRef("todo-list", {
+
+const todoListScope = scopeRef("todo-list", {
   selector: ".tasks",
   idField: "listId"
 });
 
-export function addTask(scope, { idgen }) {
-  return taskInfo => {
+export function addTask({ idgen }) {
+  this.scope(todoListScope);
+
+  return (scope, taskInfo) => {
     taskInfo.id = idgen();
     return scope.tasks.push(taskInfo);
   };
 }
 
-export function deleteTask(scope, { morph }) {
-  return ({ id }) => morph(scope.tasks).delete({ id });
+export function deleteTask({ morph }) {
+  this.scope(todoListScope);
+
+  return (scope, { id }) => morph(scope.tasks).delete({ id });
 }
 
-export function updateTask(scope, { morph, merge }) {
-  return taskInfo => morph(scope.tasks).update({ id: taskInfo.id }, task => merge(task, taskInfo));
+export function updateTask({ morph, merge }) {
+  this.scope(todoListScope);
+
+  return (scope, taskInfo) => morph(scope.tasks).update({ id: taskInfo.id }, task => merge(task, taskInfo));
 }
 
-export function completeTask(scope, { morph }) {
-  return taskInfo =>
+export function completeTask({ morph }) {
+  this.scope(todoListScope);
+
+  return (scope, taskInfo) =>
     morph(scope.tasks).update({ id: taskInfo.id }, task => {
       task.status = "complete";
     });
 }
 
-export function cancelTask(scope, { morph }) {
-  return taskInfo =>
+export function cancelTask({ morph }) {
+  this.scope(todoListScope);
+  return (scope, taskInfo) =>
     morph(scope.tasks).update({ id: taskInfo.id }, task => {
       task.status = "cancel";
     });
 }
 
-export function moveTask(scope, { morph }) {
-  return (taskInfo, direction) => {
+export function moveTask({ morph }) {
+  this.scope(todoListScope);
+
+  return (scope, { taskInfo, direction }) => {
     morph(scope.lists).move(taskInfo.id, direction);
   };
 }
 
-export function filteredTasks(scope, { view }) {
-  return (query = {}, { height }) => view(scope).select(query, { height }).render();
+export function filteredTasks({ view }) {
+  this.scope(todoListScope);
+  return (scope, query = {}, { height }) => view(scope).select(query, { height }).render();
 }

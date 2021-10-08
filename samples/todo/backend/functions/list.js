@@ -21,34 +21,35 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
-import { scopeRef } from "@liquidscale/platform";
-export const scope = scopeRef("todo-app", {
-  selector: ".lists"
-});
 
 /**
  * create a new list.
  *
  */
-export function createList(scope, { idgen }) {
-  return data => {
+export function createList({ idgen }) {
+  this.scope("todo-app");
+
+  return (scope, data) => {
     data.id = idgen();
     data.tasks = [];
     scope.lists.push(data);
   };
 }
 
-export function updateList(scope, { morph, merge }) {
-  return data => morph(scope.lists).updateOne({ id: data.id }, list => merge(list, data));
+export function updateList({ mutator, merge }) {
+  this.scope("todo-app");
+  return (scope, data) => mutator(scope.lists).updateOne({ id: data.id }, list => merge(list, data));
 }
 
-export function deleteList(scope, { morph }) {
-  return ({ id }) => morph(scope.lists).delete({ id });
+export function deleteList({ mutator }) {
+  this.scope("todo-app");
+  return (scope, { id }) => mutator(scope.lists).delete({ id });
 }
 
 /**
  * User specific list view. Query can be used to filter lists based on tags or name
  */
-export function allVisibleLists(scope, { view }) {
-  return (query = {}) => view(scope).select({ selector: ".lists", query }).render();
+export function allVisibleLists({ view }) {
+  this.scope("todo-app").immutable();
+  return (scope, query = {}) => view(scope).select({ selector: ".lists", query }).render();
 }
