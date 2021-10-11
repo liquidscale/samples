@@ -21,15 +21,20 @@
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
    SOFTWARE.
  */
+
 import { scopeRef } from "@liquidscale/platform";
 
-const todoListScope = scopeRef("todo-list", {
+const listTasksScope = scopeRef("todo-list", {
   selector: ".tasks",
   idField: "listId"
 });
 
 export function addTask({ idgen }) {
-  this.scope(todoListScope);
+  // FIXME: selector should be .tasks here too...
+  this.scope("todo-list", {
+    selector: ".lists",
+    idField: "listId"
+  });
 
   return (scope, taskInfo) => {
     taskInfo.id = idgen();
@@ -38,43 +43,39 @@ export function addTask({ idgen }) {
 }
 
 export function deleteTask({ morph }) {
-  this.scope(todoListScope);
-
+  this.scope(listTasksScope);
   return (scope, { id }) => morph(scope.tasks).delete({ id });
 }
 
 export function updateTask({ morph, merge }) {
-  this.scope(todoListScope);
-
+  this.scope(listTasksScope);
   return (scope, taskInfo) => morph(scope.tasks).update({ id: taskInfo.id }, task => merge(task, taskInfo));
 }
 
-export function completeTask({ morph }) {
-  this.scope(todoListScope);
-
+export function completeTask({ mutate }) {
+  this.scope(listTasksScope);
   return (scope, taskInfo) =>
-    morph(scope.tasks).update({ id: taskInfo.id }, task => {
+    mutate(scope.tasks).updateOne({ id: taskInfo.id }, task => {
       task.status = "complete";
     });
 }
 
 export function cancelTask({ morph }) {
-  this.scope(todoListScope);
+  this.scope(listTasksScope);
   return (scope, taskInfo) =>
-    morph(scope.tasks).update({ id: taskInfo.id }, task => {
+    morph(scope.tasks).updateOne({ id: taskInfo.id }, task => {
       task.status = "cancel";
     });
 }
 
 export function moveTask({ morph }) {
-  this.scope(todoListScope);
-
+  this.scope(listTasksScope);
   return (scope, { taskInfo, direction }) => {
-    morph(scope.lists).move(taskInfo.id, direction);
+    morph(scope.tasks).move(taskInfo.id, direction);
   };
 }
 
 export function filteredTasks({ view }) {
-  this.scope(todoListScope);
+  this.scope(listTasksScope);
   return (scope, query = {}, { height }) => view(scope).select(query, { height }).render();
 }
